@@ -1,3 +1,24 @@
-# Pinned SWE-bench Verified instance IDs (one per line). Reuse the exact set for
-# every run. Populate with `marionette discover` then hand-pick ~10-20 multi-file
-# / multi-hunk instances. Lines starting with '#' and blank lines are ignored.
+# Pinned SWE-bench Verified instance IDs (one per line). Reuse this exact set for
+# every run. Lines starting with '#' and blank lines are ignored.
+#
+# Selected 2026-06-27 from princeton-nlp/SWE-bench_Verified (test split):
+#   - gold patch touches >= 2 files (exercises decomposition),
+#   - 2-7 hunks, <= ~100 patch lines (runnable under the 50-step / $1 worker cap),
+#   - spread across all 10 multi-file repos (<= 3 per repo) for diversity.
+# Regenerate candidates with `marionette discover`.
+
+astropy__astropy-14369
+django__django-14315
+django__django-16938
+matplotlib__matplotlib-25479
+mwaskom__seaborn-3187
+pydata__xarray-3305
+pydata__xarray-6938
+pylint-dev__pylint-4604
+pylint-dev__pylint-4661
+pytest-dev__pytest-8399
+scikit-learn__scikit-learn-25102
+sphinx-doc__sphinx-8120
+sphinx-doc__sphinx-8551
+sympy__sympy-17318
+sympy__sympy-19783
