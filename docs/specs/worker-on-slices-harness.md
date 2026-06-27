@@ -9,9 +9,10 @@ placed on a cost-vs-accuracy frontier.
 1. **Decompose (once per instance)** — Orchestrator reads the issue text and emits
    an ordered list of slices (`scope` + `target_files`). Produced once, cached, and
    reused for every worker run, so all workers get the identical slice plan.
-2. **Execute** — Worker works the slices in order in one continuous mini-swe-agent
-   session inside the instance container. The worker sees the issue plus the current
-   slice scope; edits accumulate in place.
+2. **Execute** — Worker works the slices in order inside the instance container, one
+   fresh mini-swe-agent run per slice. The conversation resets each slice, but file
+   edits accumulate on disk (the git working tree persists between slices). The worker
+   sees the issue plus the current slice scope.
 3. **Grade** — Submit the cumulative diff; grade against the instance's
    `FAIL_TO_PASS` + `PASS_TO_PASS`. Pass = both green.
 
@@ -42,7 +43,8 @@ cost_usd:            float    # priced per-role, summed
 
 **Pinned parameters**
 - Decomposition input: issue text only (no repo access).
-- Worker session: continuous; sees issue + current slice; edits accumulate.
+- Worker session: one agent run per slice (conversation resets each slice); sees issue
+  + current slice; edits accumulate on disk across slices.
 - Worker cap: pin a step limit and per-instance cost limit (e.g. 50 steps / $1) —
   this sets the ceiling of the cost axis.
 - Worker temperature: 0.

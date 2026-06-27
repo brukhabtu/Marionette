@@ -1,0 +1,46 @@
+# Marionette harness configuration.
+# This is the single config surface. CLI flags override these values.
+
+dataset_name: princeton-nlp/SWE-bench_Verified
+split: test
+
+# Pinned instance set. If the file exists and is non-empty, its IDs win and the
+# auto-filter is skipped. Otherwise `discover`/`select` filters to multi-file /
+# multi-hunk gold patches and takes the first `max_instances`.
+instance_ids_file: configs/instances.txt
+max_instances: 15
+
+orchestrator:
+  # FIXED across all runs. Decomposes issue text into slices (no repo access).
+  model_name: anthropic/claude-opus-4-8
+  prompt_version: v1
+  schema_version: 1
+
+worker:
+  # Worker set (the variable axis). Single model for now; add more to sweep the
+  # cost/accuracy frontier.
+  models:
+    - anthropic/claude-haiku-4-5
+    # - anthropic/claude-sonnet-4-6   # add later to extend the frontier
+  temperature: 0
+  step_limit: 50      # per slice
+  cost_limit: 1.0     # per slice, USD
+  wall_time_limit_seconds: 0
+
+docker:
+  # null => pass `--namespace none` to the grader and build/lookup local images
+  # (required on Apple Silicon; pre-built images are x86). Set to a registry
+  # namespace (e.g. "swebench") to pull pre-built x86 images.
+  namespace: null
+  arch: arm64         # arm64 on Apple Silicon; x86_64 on Intel/CI
+  cwd: /testbed
+
+paths:
+  cache_dir: .cache/slices
+  out_dir: runs
+  results_file: runs/results.jsonl
+
+grading:
+  grade_workers: 4
+
+dry_run: false
